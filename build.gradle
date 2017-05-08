@@ -5,8 +5,8 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.0-beta1'
-        classpath ('com.uber:okbuck:0.13.0') {
+        classpath 'com.android.tools.build:gradle:2.4.0-alpha3'
+        classpath ('com.uber:okbuck:0.19.6') {
           exclude module: 'gradle'
         }
     }
@@ -69,6 +69,8 @@ subprojects { project ->
             project.android{
                 defaultConfig {
                     multiDexEnabled true
+                    versionCode 1
+                    versionName "1.0.0"
                 }
                 signingConfigs {
                     debug {
@@ -97,6 +99,9 @@ def addCommonConfigurationForJavaModules(Project project) {
 }
 
 def addCommonConfigurationForAndroidModules(Project project) {
+    project.dependencies {
+        compile 'com.google.auto.service:auto-service:1.0-rc2'
+    }
     project.android {
         compileSdkVersion config.build.compileSdkVersion
         buildToolsVersion config.build.buildToolsVersion
@@ -120,11 +125,9 @@ def addCommonConfigurationForAndroidModules(Project project) {
 
 apply plugin: 'com.uber.okbuck'
 okbuck {
-    target "android-${config.build.compileSdkVersion}"
-    buildToolVersion config.build.buildToolsVersion
-    experimental {
-        parallel = true
-    }
+    target = "android-${config.build.compileSdkVersion}"
+    buildToolVersion = config.build.buildToolsVersion
+    resourceUnion = false
 }
 
 def ENTRIES_TO_DELETE = [
